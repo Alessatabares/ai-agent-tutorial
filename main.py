@@ -7,5 +7,11 @@ from langchain_core.output_parsers import PydanticOutputParser
 
 load_dotenv()
 
-llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.7)
+class ResearchResponse(BaseModel)
+    topic: str
+    summary: str
+    sources: list[str]
+    tools_used: list[str]
 
+
+llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.7)
