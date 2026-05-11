@@ -34,8 +34,12 @@ prompt = ChatPromptTemplate.from_messages(
     ]
 ).partial(format_instructions=parser.get_format_instructions())
 
-tools = [search_tool, wiki_tool, save_tool]
 agent = create_tool_calling_agent(
     llm=llm,
     prompt=prompt,
-    tools=tools
+    tools=[]
+)
+
+agent_executor = AgentExecutor(agent=agent, tools=[], verbose=True)
+raw_response = agent_executor.invoke({"query": "What is the capital of France?"})
+print(raw_response)
