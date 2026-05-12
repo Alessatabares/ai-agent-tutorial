@@ -3,7 +3,8 @@ from langchain_community.utilities import WikipediaAPIWrapper
 from langchain.tools import Tool
 from datetime import datetime
 
-def save_to_txt(data: str, filename: str = "research_output.txt"):
+def save_to_txt(data: str):
+    filename = "research_output.txt"
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     formatted_text = f"--- Research Output ---\nTimestamp: {timestamp}\n\n{data}\n\n"
 
@@ -15,7 +16,7 @@ def save_to_txt(data: str, filename: str = "research_output.txt"):
 save_tool = Tool(
     name="save_text_to_file",
     func=save_to_txt,
-    description="Saves structured research data to a text file.",
+    description="Saves research data to a text file. Input should be the text content to save.",
 )
 
 search = DuckDuckGoSearchRun()
