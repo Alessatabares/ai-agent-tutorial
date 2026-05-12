@@ -2,21 +2,29 @@ from langchain_community.tools import WikipediaQueryRun, DuckDuckGoSearchRun
 from langchain_community.utilities import WikipediaAPIWrapper
 from langchain.tools import Tool
 from datetime import datetime
+from pydantic import BaseModel, Field
+from langchain.tools import StructuredTool
 
-def save_to_txt(data: str):
+class SaveInput(BaseModel):
+    content: str = Field(description="The final research text to save to the file")
+
+
+def save_to_txt(content: str):
     filename = "research_output.txt"
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    formatted_text = f"--- Research Output ---\nTimestamp: {timestamp}\n\n{data}\n\n"
+    formatted_text = f"--- Research Output ---\nTimestamp: {timestamp}\n\n{content}\n\n"
 
     with open(filename, "a", encoding="utf-8") as f:
         f.write(formatted_text)
-    
+
     return f"Data successfully saved to {filename}"
 
-save_tool = Tool(
-    name="save_text_to_file",
+
+save_tool = StructuredTool.from_function(
     func=save_to_txt,
-    description="Saves research data to a text file. Input should be the text content to save.",
+    name="save_text_to_file",
+    description="Save final research content to a text file. Use the content field for the text to save.",
+    args_schema=SaveInput,
 )
 
 search = DuckDuckGoSearchRun()
